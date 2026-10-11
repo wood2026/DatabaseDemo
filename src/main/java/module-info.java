@@ -12,6 +12,6 @@ module com.joshwood.databasedemo {
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
 
-    opens com.joshwood.databasedemo to javafx.fxml;
-    exports com.joshwood.databasedemo;
+    opens com.wood2026.databasedemo to javafx.fxml;
+    exports com.wood2026.databasedemo;
 }

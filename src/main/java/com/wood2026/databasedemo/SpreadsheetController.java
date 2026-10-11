@@ -1,16 +1,11 @@
-package com.joshwood.databasedemo;
+package com.wood2026.databasedemo;
 
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.poi.ss.usermodel.*;
-import java.io.IOException;
 
 import java.io.File;
 
@@ -33,6 +28,6 @@ public class SpreadsheetController {
         );
         File file = fileChooser.showOpenDialog(stage);
         SpreadsheetReader spreadsheetReader = new SpreadsheetReader(spreadsheetTable);
-        spreadsheetReader.ReadExcel(file);
+        spreadsheetReader.readExcel(file);
     }
 }

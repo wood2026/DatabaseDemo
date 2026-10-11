@@ -138,7 +138,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.joshwood.databasedemo/com.joshwood.databasedemo.SpreadsheetApplication</mainClass>
+                            <mainClass>com.joshwood.databasedemo/com.wood2026.databasedemo.SpreadsheetApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
