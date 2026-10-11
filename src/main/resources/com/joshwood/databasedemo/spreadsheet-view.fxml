@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.joshwood.databasedemo.SpreadsheetController">
+
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem text="Open Spreadsheet"
+                          onAction="#openSpreadsheet"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Exit"
+                          onAction="#exitApplication"/>
+            </Menu>
+            <Menu text="Edit"/>
+            <Menu text="View"/>
+            <Menu text="Help"/>
+        </MenuBar>
+    </top>
+
+    <center>
+        <TableView fx:id="spreadsheetTable"/>
+    </center>
+
+</BorderPane>
