@@ -20,4 +20,8 @@ public class SpreadsheetCell {
     public void setValue(Object value) {
         this.value = value;
     }
+
+    public CellAddress getAddress() {
+        return address;
+    }
 }
