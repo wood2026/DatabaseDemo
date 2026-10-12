@@ -1,12 +1,9 @@
 package com.wood2026.databasedemo;
 
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
@@ -15,22 +12,27 @@ import java.util.Map;
 
 public class SpreadsheetReader {
     private final TableView<SpreadsheetRow> spreadsheetTable;
+    private Spreadsheet spreadsheet;
     private ObservableList<SpreadsheetRow> tableData;
+
     public SpreadsheetReader(TableView<SpreadsheetRow> tableView) {
         spreadsheetTable = tableView;
     }
 
-    public void readExcel(File file) {
+    public void readExcel(File file, Spreadsheet spreadsheet) {
+        this.spreadsheet = spreadsheet;
         if (file != null) {
-           loadExcel(file);
+            loadExcel(file);
         }
     }
+
     private void loadExcel(File file) {
         tableData = FXCollections.observableArrayList();
-        toSheet(in(file));
+        in(file);
+        spreadsheetTable.refresh();
     }
-    private Spreadsheet in(File file) {
-        Spreadsheet spreadsheet = new Spreadsheet();
+
+    private void in(File file) {
 
         try (Workbook workbook = WorkbookFactory.create(file)) {
             Sheet sheet = workbook.getSheetAt(0);
@@ -40,7 +42,11 @@ public class SpreadsheetReader {
             for (Row row : sheet) {
                 int rowIndex = row.getRowNum();
                 SpreadsheetRow spreadsheetRow =
-                        new SpreadsheetRow(rowIndex);
+                        spreadsheet.getRows().get(rowIndex);
+                if (spreadsheetRow == null) {
+                    spreadsheetRow = new SpreadsheetRow(rowIndex);
+                    spreadsheet.setRow(rowIndex, spreadsheetRow);
+                }
                 for (Cell cell : row) {
                     int columnIndex = cell.getColumnIndex();
                     String value = formatter.formatCellValue(cell, evaluator);
@@ -59,12 +65,12 @@ public class SpreadsheetReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return spreadsheet;
     }
-    private void toSheet(Spreadsheet sheet){
+    /*
+    private void toSheet(){
         spreadsheetTable.getColumns().clear();
         for (Map.Entry<Integer, SpreadsheetColumn> entry
-                : sheet.getColumns().entrySet()) {
+                : spreadsheet.getColumns().entrySet()) {
 
             int columnIndex = entry.getKey();
             SpreadsheetColumn spreadsheetColumn = entry.getValue();
@@ -77,11 +83,11 @@ public class SpreadsheetReader {
             spreadsheetTable.getColumns().add(column);
         }
         for (int r = 0; r < 100; r++) {
-            SpreadsheetRow row = sheet.getRows().get(r);
+            SpreadsheetRow row = spreadsheet.getRows().get(r);
 
             if (row == null) {
                 row = new SpreadsheetRow(r);
-                sheet.setRow(r, row);
+                spreadsheet.setRow(r, row);
             }
 
             tableData.add(row);
@@ -89,4 +95,5 @@ public class SpreadsheetReader {
 
         spreadsheetTable.setItems(tableData);
     }
+     */
 }

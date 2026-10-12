@@ -70,6 +70,6 @@ public class SpreadsheetController {
         );
         File file = fileChooser.showOpenDialog(stage);
         SpreadsheetReader spreadsheetReader = new SpreadsheetReader(spreadsheetTable);
-        spreadsheetReader.readExcel(file);
+        spreadsheetReader.readExcel(file, spreadsheet);
     }
 }
