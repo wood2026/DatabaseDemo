@@ -11,11 +11,12 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 public class SpreadsheetReader {
-    private final TableView<ObservableList<String>> spreadsheetTable;
-    private ObservableList<ObservableList<String>> tableData;
-    public SpreadsheetReader(TableView<ObservableList<String>> tableView) {
+    private final TableView<SpreadsheetRow> spreadsheetTable;
+    private ObservableList<SpreadsheetRow> tableData;
+    public SpreadsheetReader(TableView<SpreadsheetRow> tableView) {
         spreadsheetTable = tableView;
     }
 
@@ -26,52 +27,66 @@ public class SpreadsheetReader {
     }
     private void loadExcel(File file) {
         tableData = FXCollections.observableArrayList();
+        toSheet(in(file));
+    }
+    private Spreadsheet in(File file) {
+        Spreadsheet spreadsheet = new Spreadsheet();
+
         try (Workbook workbook = WorkbookFactory.create(file)) {
             Sheet sheet = workbook.getSheetAt(0);
-            int columnCount = sheet.getRow(0).getLastCellNum();
             DataFormatter formatter = new DataFormatter();
             FormulaEvaluator evaluator =
                     workbook.getCreationHelper().createFormulaEvaluator();
-
             for (Row row : sheet) {
-                if (row.getRowNum() == 0) {
-                    continue;
+                int rowIndex = row.getRowNum();
+                SpreadsheetRow spreadsheetRow =
+                        new SpreadsheetRow(rowIndex);
+                for (Cell cell : row) {
+                    int columnIndex = cell.getColumnIndex();
+                    String value = formatter.formatCellValue(cell, evaluator);
+                    if (value.isEmpty()) {
+                        continue;
+                    }
+                    CellAddress address =
+                            new CellAddress(rowIndex, columnIndex);
+                    SpreadsheetCell spreadsheetCell =
+                            new SpreadsheetCell(address);
+                    spreadsheetCell.setValue(value);
+                    spreadsheetRow.setCell(columnIndex, spreadsheetCell);
                 }
-                ObservableList<String> rowData = FXCollections.observableArrayList();
-                for (int c = 0; c < columnCount; c++) {
-                    Cell cell = row.getCell(c, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-                    if (cell == null) {
-                        rowData.add("");
-                    } else
-                        rowData.add(formatter.formatCellValue(cell, evaluator));
-                }
-                tableData.add(rowData);
-                //System.out.println();
+                spreadsheet.setRow(rowIndex, spreadsheetRow);
             }
-            spreadsheetTable.getColumns().clear();
-
-            for (int c = 0; c < columnCount; c++) {
-                final int columnIndex = c;
-
-                Cell headerCell = sheet.getRow(0).getCell(c);
-
-                String headerName = formatter.formatCellValue(headerCell);
-
-                TableColumn<ObservableList<String>, String> column =
-                        new TableColumn<>(headerName);
-
-                column.setCellValueFactory(cellData ->
-                        new ReadOnlyStringWrapper(
-                                cellData.getValue().get(columnIndex)
-                        )
-                );
-
-                spreadsheetTable.getColumns().add(column);
-            }
-
-            spreadsheetTable.setItems(tableData);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return spreadsheet;
+    }
+    private void toSheet(Spreadsheet sheet){
+        spreadsheetTable.getColumns().clear();
+        for (Map.Entry<Integer, SpreadsheetColumn> entry
+                : sheet.getColumns().entrySet()) {
+
+            int columnIndex = entry.getKey();
+            SpreadsheetColumn spreadsheetColumn = entry.getValue();
+
+            TableColumn<SpreadsheetRow, String> column =
+                    new TableColumn<>(spreadsheetColumn.getLabel());
+
+            // Set cell value factory here
+
+            spreadsheetTable.getColumns().add(column);
+        }
+        for (int r = 0; r < 100; r++) {
+            SpreadsheetRow row = sheet.getRows().get(r);
+
+            if (row == null) {
+                row = new SpreadsheetRow(r);
+                sheet.setRow(r, row);
+            }
+
+            tableData.add(row);
+        }
+
+        spreadsheetTable.setItems(tableData);
     }
 }

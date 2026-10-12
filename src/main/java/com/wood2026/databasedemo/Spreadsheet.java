@@ -31,4 +31,8 @@ public class Spreadsheet {
     public void setColumns(Map<Integer, SpreadsheetColumn> columns) {
         this.columns = columns;
     }
+
+    public void setRow(int rowIndex, SpreadsheetRow row) {
+        rows.put(rowIndex, row);
+    }
 }

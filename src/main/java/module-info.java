@@ -1,4 +1,4 @@
-module com.joshwood.databasedemo {
+module com.wood2026.databasedemo {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
