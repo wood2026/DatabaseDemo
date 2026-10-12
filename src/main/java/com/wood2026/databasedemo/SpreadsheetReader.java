@@ -1,19 +1,15 @@
 package com.wood2026.databasedemo;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
+
 import javafx.scene.control.TableView;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 public class SpreadsheetReader {
     private final TableView<SpreadsheetRow> spreadsheetTable;
     private Spreadsheet spreadsheet;
-    private ObservableList<SpreadsheetRow> tableData;
 
     public SpreadsheetReader(TableView<SpreadsheetRow> tableView) {
         spreadsheetTable = tableView;
@@ -27,7 +23,6 @@ public class SpreadsheetReader {
     }
 
     private void loadExcel(File file) {
-        tableData = FXCollections.observableArrayList();
         in(file);
         spreadsheetTable.refresh();
     }
@@ -63,37 +58,8 @@ public class SpreadsheetReader {
                 spreadsheet.setRow(rowIndex, spreadsheetRow);
             }
         } catch (IOException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }
-    /*
-    private void toSheet(){
-        spreadsheetTable.getColumns().clear();
-        for (Map.Entry<Integer, SpreadsheetColumn> entry
-                : spreadsheet.getColumns().entrySet()) {
-
-            int columnIndex = entry.getKey();
-            SpreadsheetColumn spreadsheetColumn = entry.getValue();
-
-            TableColumn<SpreadsheetRow, String> column =
-                    new TableColumn<>(spreadsheetColumn.getLabel());
-
-            // Set cell value factory here
-
-            spreadsheetTable.getColumns().add(column);
-        }
-        for (int r = 0; r < 100; r++) {
-            SpreadsheetRow row = spreadsheet.getRows().get(r);
-
-            if (row == null) {
-                row = new SpreadsheetRow(r);
-                spreadsheet.setRow(r, row);
-            }
-
-            tableData.add(row);
-        }
-
-        spreadsheetTable.setItems(tableData);
-    }
-     */
 }

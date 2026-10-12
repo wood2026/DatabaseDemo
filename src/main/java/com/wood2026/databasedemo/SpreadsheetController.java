@@ -29,22 +29,9 @@ public class SpreadsheetController {
     private void initializeTable() {
         ObservableList<SpreadsheetRow> visibleRows =
                 FXCollections.observableArrayList();
-        for (int c = 0; c < 52; c++) {
-            final int columnIndex = c;
+        for (int columnIndex = 0; columnIndex < 52; columnIndex++) {
 
-            TableColumn<SpreadsheetRow, String> column =
-                    new TableColumn<>("Column " + (c + 1));
-
-            column.setCellValueFactory(data -> {
-                SpreadsheetCell cell =
-                        data.getValue().getCell(columnIndex);
-
-                String value = cell == null || cell.getValue() == null
-                        ? ""
-                        : cell.getValue().toString();
-
-                return new ReadOnlyStringWrapper(value);
-            });
+            TableColumn<SpreadsheetRow, String> column = createColumn(columnIndex, columnIndex);
 
             enableCellEditing(column, columnIndex);
             spreadsheetTable.getColumns().add(column);
@@ -57,6 +44,23 @@ public class SpreadsheetController {
         }
 
         spreadsheetTable.setItems(visibleRows);
+    }
+
+    private static TableColumn<SpreadsheetRow, String> createColumn(int c, int columnIndex) {
+        TableColumn<SpreadsheetRow, String> column =
+                new TableColumn<>("Column " + (c + 1));
+
+        column.setCellValueFactory(data -> {
+            SpreadsheetCell cell =
+                    data.getValue().getCell(columnIndex);
+
+            String value = cell == null || cell.getValue() == null
+                    ? ""
+                    : cell.getValue().toString();
+            column.setSortable(false);
+            return new ReadOnlyStringWrapper(value);
+        });
+        return column;
     }
 
     private void enableCellEditing(TableColumn<SpreadsheetRow, String> column,
