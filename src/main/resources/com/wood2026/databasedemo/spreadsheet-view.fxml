@@ -16,7 +16,10 @@
                           onAction="#exitApplication"/>
             </Menu>
             <Menu text="Edit"/>
-            <Menu text="View"/>
+            <Menu text="View">
+                <MenuItem text="Nonsense"
+                        onAction="#labelNonsense"/>
+            </Menu>
             <Menu text="Help"/>
         </MenuBar>
     </top>

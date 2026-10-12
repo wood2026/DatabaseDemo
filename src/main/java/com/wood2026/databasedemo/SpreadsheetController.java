@@ -10,7 +10,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 
 public class SpreadsheetController {
@@ -24,6 +23,11 @@ public class SpreadsheetController {
         spreadsheetTable.setEditable(true);
         spreadsheetTable.getSelectionModel().setCellSelectionEnabled(true);
         initializeTable();
+    }
+
+    @FXML
+    public void labelNonsense(){
+        //implement me
     }
 
     private void initializeTable() {
@@ -75,6 +79,7 @@ public class SpreadsheetController {
         }
         return ret;
     }
+
 
     private void enableCellEditing(TableColumn<SpreadsheetRow, String> column,
                                    int columnIndex) {
