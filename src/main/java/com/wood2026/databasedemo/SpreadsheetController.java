@@ -31,7 +31,7 @@ public class SpreadsheetController {
                 FXCollections.observableArrayList();
         for (int columnIndex = 0; columnIndex < 52; columnIndex++) {
 
-            TableColumn<SpreadsheetRow, String> column = createColumn(columnIndex, columnIndex);
+            TableColumn<SpreadsheetRow, String> column = createColumn(columnIndex);
 
             enableCellEditing(column, columnIndex);
             spreadsheetTable.getColumns().add(column);
@@ -46,9 +46,9 @@ public class SpreadsheetController {
         spreadsheetTable.setItems(visibleRows);
     }
 
-    private static TableColumn<SpreadsheetRow, String> createColumn(int c, int columnIndex) {
+    private static TableColumn<SpreadsheetRow, String> createColumn(int columnIndex) {
         TableColumn<SpreadsheetRow, String> column =
-                new TableColumn<>("Column " + (c + 1));
+                new TableColumn<>("Column " + (columnIndex + 1));
         column.setSortable(false);
         column.setCellValueFactory(data -> {
             SpreadsheetCell cell =
