@@ -55,7 +55,6 @@ public class SpreadsheetReader {
                     spreadsheetCell.setValue(value);
                     spreadsheetRow.setCell(columnIndex, spreadsheetCell);
                 }
-                spreadsheet.setRow(rowIndex, spreadsheetRow);
             }
         } catch (IOException e) {
             //noinspection CallToPrintStackTrace
