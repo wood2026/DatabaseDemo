@@ -48,7 +48,7 @@ public class SpreadsheetController {
 
     private static TableColumn<SpreadsheetRow, String> createColumn(int columnIndex) {
         TableColumn<SpreadsheetRow, String> column =
-                new TableColumn<>("Column " + (columnIndex + 1));
+                new TableColumn<>(labelMaker(columnIndex));
         column.setSortable(false);
         column.setCellValueFactory(data -> {
             SpreadsheetCell cell =
@@ -60,6 +60,20 @@ public class SpreadsheetController {
             return new ReadOnlyStringWrapper(value);
         });
         return column;
+    }
+
+    private static String labelMaker(int columnIndex) {
+        char alpha = 'A';
+        char beta = 'A';
+        String ret;
+        if (columnIndex > 25) {
+            beta += (char)(columnIndex - 26);
+            ret = String.valueOf(alpha) + beta;
+        } else {
+            alpha += (char)columnIndex;
+            ret = String.valueOf(alpha);
+        }
+        return ret;
     }
 
     private void enableCellEditing(TableColumn<SpreadsheetRow, String> column,
