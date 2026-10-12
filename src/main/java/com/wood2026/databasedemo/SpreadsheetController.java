@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -20,6 +21,8 @@ public class SpreadsheetController {
     @FXML
     public void initialize() {
         spreadsheet = new Spreadsheet();
+        spreadsheetTable.setEditable(true);
+        spreadsheetTable.getSelectionModel().setCellSelectionEnabled(true);
         initializeTable();
     }
 
@@ -43,6 +46,7 @@ public class SpreadsheetController {
                 return new ReadOnlyStringWrapper(value);
             });
 
+            enableCellEditing(column, columnIndex);
             spreadsheetTable.getColumns().add(column);
         }
         for (int r = 0; r < 100; r++) {
@@ -53,6 +57,22 @@ public class SpreadsheetController {
         }
 
         spreadsheetTable.setItems(visibleRows);
+    }
+
+    private void enableCellEditing(TableColumn<SpreadsheetRow, String> column,
+                                   int columnIndex) {
+        column.setEditable(true);
+        column.setCellFactory(TextFieldTableCell.forTableColumn());
+        column.setOnEditCommit(event -> {
+            SpreadsheetRow row = event.getRowValue();
+            SpreadsheetCell cell = row.getCell(columnIndex);
+            if (cell == null) {
+                cell = new SpreadsheetCell(new CellAddress(row.getIndex(), columnIndex));
+                row.setCell(columnIndex, cell);
+            }
+            cell.setValue(event.getNewValue());
+            spreadsheetTable.refresh();
+        });
     }
 
     @FXML
