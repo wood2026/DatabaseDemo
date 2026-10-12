@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
@@ -24,6 +25,9 @@ public class SpreadsheetController {
         spreadsheet = new Spreadsheet();
         spreadsheetTable.setEditable(true);
         spreadsheetTable.getSelectionModel().setCellSelectionEnabled(true);
+        spreadsheetTable.setColumnResizePolicy(
+                TableView.UNCONSTRAINED_RESIZE_POLICY
+        );
         initializeTable();
     }
 
@@ -34,8 +38,22 @@ public class SpreadsheetController {
                 ? WordGenerator.getUniqueRandomWords(spreadsheetTable.getColumns().size())
                 : List.of();
         for (int i = 0; i < spreadsheetTable.getColumns().size(); i++) {
-            spreadsheetTable.getColumns().get(i).setText(
-                    nonsenseEnabled ? words.get(i) : labelMaker(i));
+            TableColumn<SpreadsheetRow, ?> column =
+                    spreadsheetTable.getColumns().get(i);
+
+            String label = nonsenseEnabled
+                    ? words.get(i)
+                    : labelMaker(i);
+            Text measurement = new Text(label);
+            measurement.setFont(javafx.scene.text.Font.font(12));
+
+            double width = Math.max(80,
+                    measurement.getLayoutBounds().getWidth() + 30);
+
+            column.setText(label);
+            column.setMinWidth(width);
+            column.setPrefWidth(width);
+            column.setMaxWidth(Double.MAX_VALUE);
         }
     }
 
