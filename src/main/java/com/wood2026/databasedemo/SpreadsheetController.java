@@ -49,7 +49,7 @@ public class SpreadsheetController {
     private static TableColumn<SpreadsheetRow, String> createColumn(int c, int columnIndex) {
         TableColumn<SpreadsheetRow, String> column =
                 new TableColumn<>("Column " + (c + 1));
-
+        column.setSortable(false);
         column.setCellValueFactory(data -> {
             SpreadsheetCell cell =
                     data.getValue().getCell(columnIndex);
@@ -57,7 +57,6 @@ public class SpreadsheetController {
             String value = cell == null || cell.getValue() == null
                     ? ""
                     : cell.getValue().toString();
-            column.setSortable(false);
             return new ReadOnlyStringWrapper(value);
         });
         return column;
