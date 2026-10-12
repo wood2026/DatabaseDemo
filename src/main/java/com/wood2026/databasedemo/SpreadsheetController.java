@@ -11,11 +11,26 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SpreadsheetController {
     @FXML
     private TableView<SpreadsheetRow> spreadsheetTable;
     private Spreadsheet spreadsheet;
+    private boolean nonsenseEnabled;
+    private static final List<String> NONSENSE_WORDS = List.of(
+            "Potato", "Blubbins", "Turnip", "Wobble", "Pickle", "Goblin", "Noodle", "TaxFraud",
+            "Banana", "Flibbertigibbet", "Sprocket", "Waffles", "Pudding", "Dingus", "Platypus",
+            "Bamboozle", "Trousers", "Sasquatch", "Marmalade", "Kerfuffle", "Snickerdoodle",
+            "Hooligan", "Doodad", "Shenanigans", "Crumpet", "Boondoggle", "Squiggle", "Gizmo",
+            "Biscuit", "Honk", "Nonsense", "Toaster", "Rutabaga", "Dumpling", "Pineapple",
+            "Moonbeam", "Sneeze", "Trombone", "Muffin", "Peculiar", "Whoopsie", "Jellybean",
+            "Doohickey", "Spatula", "Nincompoop", "Cucumber", "Hiccup", "Quokka", "Zigzag",
+            "Fandango", "Yodel", "Gobbledygook", "TaterTot", "Razzmatazz", "Flapjack",
+            "Brouhaha", "Wiggle", "Cattywampus", "Dinosaur", "Bubbles"
+    );
 
     @FXML
     public void initialize() {
@@ -26,8 +41,16 @@ public class SpreadsheetController {
     }
 
     @FXML
-    public void labelNonsense(){
-        //implement me
+    public void labelNonsense() {
+        nonsenseEnabled = !nonsenseEnabled;
+        List<String> words = new ArrayList<>(NONSENSE_WORDS);
+        if (nonsenseEnabled) {
+            Collections.shuffle(words);
+        }
+        for (int i = 0; i < spreadsheetTable.getColumns().size(); i++) {
+            spreadsheetTable.getColumns().get(i).setText(
+                    nonsenseEnabled ? words.get(i) : labelMaker(i));
+        }
     }
 
     private void initializeTable() {
